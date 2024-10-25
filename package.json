@@ -1,0 +1,17 @@
+{
+  "name": "saucelab_test",
+  "version": "1.0.0",
+  "description": "This project has been given by OSTAD LP. as the final assessment on the demo website: https://www.saucedemo.com/",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx wdio run ./wdio.conf.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@wdio/cli": "^9.2.1",
+    "@wdio/local-runner": "^9.2.1",
+    "@wdio/mocha-framework": "^9.1.3"
+  }
+}
