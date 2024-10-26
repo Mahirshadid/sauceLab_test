@@ -1,9 +1,3 @@
-// class addToCart {
-//     get itemPrices(){
-//         return $('//div[@data-test="inventory-item-price"]');
-//     }
-// }
-
 class AddToCartAction {
     async clickOnAddToCart(itemName) {
         const addToCartButton = await $(`//button[@name="add-to-cart-${itemName}"]`);
@@ -17,6 +11,13 @@ class AddToCartAction {
     }
     get itemPrices(){
         return $$('//div[@data-test="inventory-item-price"][1]');
+    }
+    async clickOnAddToCartForGU(itemNo) {
+        const addToCartButton = await $(`//div[@class="inventory_item"][${itemNo}]/div/div/button`);
+        await addToCartButton.click();
+    }
+    get itemNameForGU(){
+        return $('//div[@class="inventory_item"][1]/div/div/a');
     }
 }
 

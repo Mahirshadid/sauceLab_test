@@ -1,5 +1,6 @@
 const { expect, browser } = require('@wdio/globals');
 const Login = require('../pageobjects/logInPage/logInAction');
+const filter = require('../pageobjects/Features/Filter/filter');
 const hamburgerA = require('../pageobjects/Features/Hamburger/hamAction');
 const hamburgerL = require('../pageobjects/Features/Hamburger/hamLocators');
 const resetApp = require('../pageobjects/Features/ResetAppState/rasAction');
@@ -9,37 +10,35 @@ const checkOutActions = require('../pageobjects/checkOut/checkOutActions');
 const messages = require('../pageobjects/Features/Messages/messages')
 const logout = require('../pageobjects/Features/logOut/logOut')
 
-let std_user = {
-    username: 'standard_user',
+let pg_user = {
+    username: 'performance_glitch_user',
     password: 'secret_sauce'
 };
 
-let items = {
-    item1: 'sauce-labs-backpack',
-    item2: 'sauce-labs-bike-light',
-    item3: 'sauce-labs-bolt-t-shirt'
-};
+let filters = {
+    ZtoA: 'za'
+}
+
+let itemNo = 1;
 
 let itemsInCart = {
-    item1: "Sauce Labs Backpack",
-    item2: "Sauce Labs Bike Light",
-    item3: "Sauce Labs Bolt T-Shirt"
+    item1: "Test.allTheThings() T-Shirt (Red)",
 };
 
 let checkOutData = {
     f_n: 'mahir',
     l_n: 'shadid',
     p_c: '4203'
-} 
+}
 
-let totalPrice = '$55.97';
-let totalPriceWithTax = '$60.45';
+let totalPrice = '$15.99';
+let totalPriceWithTax = '$17.27';
 
-describe('Login with standard user and perform actions', () => {
+describe('Login with glitched user and perform actions', () => {
     it('Should show inventory page after successful login', async()=>{
         await Login.InsertLoginInfo(
-            std_user.username,
-            std_user.password
+            pg_user.username,
+            pg_user.password
         );
         await Login.ClickLoginButton();
         await expect(browser).toHaveUrl(expect.stringContaining('inventory'));
@@ -55,21 +54,24 @@ describe('Login with standard user and perform actions', () => {
         await resetApp.clickOnRAS();
         await hamburgerA.clickOnHamClose();
     })
-    it('Should add 3 items from the inventory', async()=>{
-        await addToCart.clickOnAddToCart(items.item1);
-        await addToCart.clickOnAddToCart(items.item2);
-        await addToCart.clickOnAddToCart(items.item3);
-
-        await addToCart.clickOnCartIcon();
-
-        await browser.waitUntil(async () => {
-            const cartItems = await addToCart.cartItems(itemsInCart.item1);
-            return await cartItems.isDisplayed();
+    it('Should select a filter option', async()=>{
+        await filter.filter.waitUntil(async function () {
+            return (await this.isDisplayed());
         }, {
-            timeout: 5000,
-            timeoutMsg: 'Cart items were not visible in 5s'
+            timeout: 10000,
+            timeoutMsg: 'Filter option was not visible in 10s'
         });
-
+        const sortDropdown = await filter.filter;
+        await sortDropdown.selectByAttribute('value', `${filters.ZtoA}`);
+    })
+    it('Should add the first product into the cart', async()=>{
+        await addToCart.itemNameForGU.waitUntil(async function () {
+            return (await this.isDisplayed());
+        }, {
+            timeout: 10000,
+            timeoutMsg: 'Items were not visible in 10s'
+        });
+        await addToCart.clickOnAddToCartForGU(itemNo);
     })
     it('Should verify the selected items and total price', async()=>{
         await addToCart.clickOnCartIcon();
