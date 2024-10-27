@@ -8,7 +8,7 @@
     "reporter": "allure generate allure-results --clean && allure open"
   },
   "keywords": [],
-  "author": "",
+  "author": "Mahir Shadid | mahir.shadid@gmail.com",
   "license": "ISC",
   "devDependencies": {
     "@wdio/allure-reporter": "^9.1.3",
