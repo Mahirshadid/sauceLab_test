@@ -10,48 +10,63 @@ const checkOutActions = require('../pageobjects/checkOut/checkOutActions');
 const messages = require('../pageobjects/Features/Messages/messages')
 const logout = require('../pageobjects/Features/logOut/logOut')
 
+// storing login credentials for glitched user
 let pg_user = {
     username: 'performance_glitch_user',
     password: 'secret_sauce'
 };
 
+// storing filter options
 let filters = {
-    ZtoA: 'za'
+    ZtoA: 'za',
+    AtoZ: 'az',
+    LowToHigh: 'lohi',
+    HighToLow: 'hilo'
 }
 
+// Selecting the first item
 let itemNo = 1;
 
+// Expected Items in cart for verification
 let itemsInCart = {
     item1: "Test.allTheThings() T-Shirt (Red)",
 };
 
+// Shipping info for checking out
 let checkOutData = {
     f_n: 'mahir',
     l_n: 'shadid',
     p_c: '4203'
 }
 
+// Actual values for total price and total price with tax for verification
 let totalPrice = '$15.99';
 let totalPriceWithTax = '$17.27';
 
 describe('Login with glitched user and perform actions', () => {
     it('Should show inventory page after successful login', async()=>{
+        // Login
         await Login.InsertLoginInfo(
             pg_user.username,
             pg_user.password
         );
         await Login.ClickLoginButton();
+        // Verifying that the login is successful and redirected to inventory page
         await expect(browser).toHaveUrl(expect.stringContaining('inventory'));
     })
     it('Should open hamburger menu and reset app state', async()=>{
+        // Open Hamburger Menu
         await hamburgerA.clickOnHam();
+        // Wait until it shows up
         await hamburgerL.hamburgerMenu.waitUntil(async function () {
             return (await this.isDisplayed());
         }, {
             timeout: 5000,
             timeoutMsg: 'Hamburger menu was not visible in 5s'
         })
+        // Click on reset app state
         await resetApp.clickOnRAS();
+        // Close hamburger menu
         await hamburgerA.clickOnHamClose();
     })
     it('Should select a filter option', async()=>{
@@ -62,6 +77,7 @@ describe('Login with glitched user and perform actions', () => {
             timeoutMsg: 'Filter option was not visible in 10s'
         });
         const sortDropdown = await filter.filter;
+        // Selecting the given filter option
         await sortDropdown.selectByAttribute('value', `${filters.ZtoA}`);
     })
     it('Should add the first product into the cart', async()=>{
@@ -71,20 +87,23 @@ describe('Login with glitched user and perform actions', () => {
             timeout: 10000,
             timeoutMsg: 'Items were not visible in 10s'
         });
+        // Adding the first item into the cart
         await addToCart.clickOnAddToCartForGU(itemNo);
     })
     it('Should verify the selected items and total price', async()=>{
+        // Checking Cart
         await addToCart.clickOnCartIcon();
+        // Checkout Button Clicked
         await checkOutActions.clickCheckout();
-
+        // Inserting Shipping Credentials
         await checkOutActions.insertCheckoutInfo(
             checkOutData.f_n,
             checkOutData.l_n,
             checkOutData.p_c
         );
-
+        // Clicking Continue to final page
         await checkOutActions.clickOnContinue();
-
+        // Verifying Cart items that are added
         for (const itemName of Object.values(itemsInCart)) {
             const cartItemElement = await addToCart.cartItems(itemName);
             const cartItemText = await cartItemElement.getText();
@@ -100,6 +119,7 @@ describe('Login with glitched user and perform actions', () => {
             calculatedTotalPrice += priceValue;
             
         }
+        // verifying total price
         const expectedTotalPricewithoutTax = parseFloat(totalPrice.replace('$', ''));
         await expect(calculatedTotalPrice).toEqual(expectedTotalPricewithoutTax);
 
@@ -113,7 +133,7 @@ describe('Login with glitched user and perform actions', () => {
         const expectedTotalPrice = parseFloat(totalPriceWithTax.replace('$', ''));
 
         console.log(`Expected Total Price with Tax: ${expectedTotalPrice}`);
-
+        // verifying total price with Tax
         await expect(totalPriceWithTaxValue).toEqual(expectedTotalPrice);
     })
     it('Should finish the purchase journey', async()=>{
@@ -122,7 +142,7 @@ describe('Login with glitched user and perform actions', () => {
     it('Should verify the purchase', async()=>{
         const thankYouMsg = await messages.thankYouMsgAfterOrder;
         const thankYouMsgText = await thankYouMsg.getText();
-
+        // verifying success message
         await expect(thankYouMsgText).toEqual('Thank you for your order!');
     })
     it('Should reset the App and Log Out', async()=>{
