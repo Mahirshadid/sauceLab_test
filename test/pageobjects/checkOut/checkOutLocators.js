@@ -9,6 +9,9 @@ class checkOutLocators {
             postCode: $('//input[@data-test="postalCode"]')
         };
     }
+    get checkoutItems(){
+        return $(`(//div[@data-test="inventory-item-name"])`);
+    }
     get continueToPurchaseButton(){
         return $('//input[@data-test="continue"]');
     }

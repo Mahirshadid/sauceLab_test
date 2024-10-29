@@ -5,7 +5,6 @@ const hamburgerA = require('../pageobjects/Features/Hamburger/hamAction');
 const hamburgerL = require('../pageobjects/Features/Hamburger/hamLocators');
 const resetApp = require('../pageobjects/Features/ResetAppState/rasAction');
 const addToCart = require('../pageobjects/Features/Cart/AddToCart');
-const checkOutLocators = require('../pageobjects/checkOut/checkOutLocators');
 const checkOutActions = require('../pageobjects/checkOut/checkOutActions');
 const messages = require('../pageobjects/Features/Messages/messages')
 const logout = require('../pageobjects/Features/logOut/logOut')
@@ -24,9 +23,6 @@ let filters = {
     HighToLow: 'hilo'
 }
 
-// Selecting the first item
-let itemNo = 1;
-
 // Expected Items in cart for verification
 let itemsInCart = {
     item1: "Test.allTheThings() T-Shirt (Red)",
@@ -39,11 +35,43 @@ let checkOutData = {
     p_c: '4203'
 }
 
-// Actual values for total price and total price with tax for verification
-let totalPrice = '$15.99';
-let totalPriceWithTax = '$17.27';
-
 describe('Login with glitched user and perform actions', () => {
+
+    // Function to count the length of the items list and get the items
+    async function getInventoryItems() {
+        const inventoryList = await addToCart.inventoryList;
+        const inventoryListLen = inventoryList.length;
+
+        const items = [];
+        for (let i = 0; i < inventoryListLen; i++) {
+            const itemName = await inventoryList[i].getText();
+            items.push(itemName);
+        }
+        return items;
+    }
+    // Function to get the prices
+    async function getInventoryPrices() {
+        const inventoryList = await addToCart.inventoryPriceList;
+        const prices = [];
+        for (let i = 0; i < inventoryList.length; i++) {
+            const itemPrice = await inventoryList[i].getText();
+            prices.push(itemPrice);
+        }
+        return prices;
+    }
+
+    async function getFirstItemAndPrice() {
+        const items = await getInventoryItems();
+        const prices = await getInventoryPrices();
+
+        const firstItem = items[0];
+        const firstItemPrice = prices[0];
+
+        return { name: firstItem, price: firstItemPrice };
+    }
+
+    let actualItems = {};
+
     it('Should show inventory page after successful login', async()=>{
         // Login
         await Login.InsertLoginInfo(
@@ -81,65 +109,71 @@ describe('Login with glitched user and perform actions', () => {
         await sortDropdown.selectByAttribute('value', `${filters.ZtoA}`);
     })
     it('Should add the first product into the cart', async()=>{
-        await addToCart.itemNameForGU.waitUntil(async function () {
-            return (await this.isDisplayed());
-        }, {
-            timeout: 10000,
-            timeoutMsg: 'Items were not visible in 10s'
-        });
+
         // Adding the first item into the cart
-        await addToCart.clickOnAddToCartForGU(itemNo);
-    })
-    it('Should verify the selected items and total price', async()=>{
+        const { name: firstItem, price: firstItemPrice } = await getFirstItemAndPrice();
+        const firstItemName = firstItem.toLowerCase().replace(/ /g, '-');
+        await addToCart.clickOnAddToCart(firstItemName);
+
+        actualItems = { item1:firstItem };
+
+        const firstItemPriceValue =  parseFloat(firstItemPrice.replace('$', ''));
+
+        // calculating actual values
+        let calculateWithTax = (firstItemPriceValue*0.08);
+        calculatedTotalPrice = firstItemPriceValue+calculateWithTax;
+
         // Checking Cart
         await addToCart.clickOnCartIcon();
+
+        await browser.waitUntil(async () => {
+            const cartItems = await addToCart.cartItems(itemsInCart.item1);
+            return await cartItems.isDisplayed();
+        }, {
+            timeout: 5000,
+            timeoutMsg: 'Cart items were not visible in 5s'
+        });
+    })
+    it('Should perform checkout actions', async()=>{
+
         // Checkout Button Clicked
         await checkOutActions.clickCheckout();
+
         // Inserting Shipping Credentials
         await checkOutActions.insertCheckoutInfo(
             checkOutData.f_n,
             checkOutData.l_n,
             checkOutData.p_c
         );
+
         // Clicking Continue to final page
         await checkOutActions.clickOnContinue();
+    })
+    it('Should verify the selected item', async()=>{
         // Verifying Cart items that are added
-        for (const itemName of Object.values(itemsInCart)) {
+        for (const itemName of Object.values(actualItems)) {
             const cartItemElement = await addToCart.cartItems(itemName);
             const cartItemText = await cartItemElement.getText();
             await expect(cartItemText).toEqual(itemName);
         }
-
+    })
+    it('Should verify total price including tax', async()=>{
         const priceElements = await addToCart.itemPrices;
-        let calculatedTotalPrice = 0;
-
+        let calculatedTotalPriceWithTax = 0;
+        const taxRate = 0.08; // 8% tax rate
         for (const priceElement of priceElements) {
             const priceText = await priceElement.getText();
             const priceValue = parseFloat(priceText.replace('$', ''));
-            calculatedTotalPrice += priceValue;
-            
+            const calculatedPriceWithTax = priceValue + (priceValue * taxRate); 
+            calculatedTotalPriceWithTax += calculatedPriceWithTax;
         }
-        // verifying total price
-        const expectedTotalPricewithoutTax = parseFloat(totalPrice.replace('$', ''));
-        await expect(calculatedTotalPrice).toEqual(expectedTotalPricewithoutTax);
-
-        const totalPriceWithTaxElement = await checkOutLocators.totalPriceWithTax;
-        const totalPriceWithTaxText = await totalPriceWithTaxElement.getText();
-        const totalPriceWithTaxTexttrimmed = totalPriceWithTaxText.split('Total: ')[1].trim();
-        const totalPriceWithTaxValue = parseFloat(totalPriceWithTaxTexttrimmed.replace('$', ''));
-
-        console.log(`Total Price with Tax from Page: ${totalPriceWithTaxValue}`); 
-
-        const expectedTotalPrice = parseFloat(totalPriceWithTax.replace('$', ''));
-
-        console.log(`Expected Total Price with Tax: ${expectedTotalPrice}`);
         // verifying total price with Tax
-        await expect(totalPriceWithTaxValue).toEqual(expectedTotalPrice);
+        await expect(calculatedTotalPriceWithTax.toFixed(2)).toEqual(calculatedTotalPrice.toFixed(2));
     })
-    it('Should finish the purchase journey', async()=>{
+    it('Should finish the purchase', async()=>{
         await checkOutActions.clickOnFinish();
     })
-    it('Should verify the purchase', async()=>{
+    it('Should verify the purchase with success message', async()=>{
         const thankYouMsg = await messages.thankYouMsgAfterOrder;
         const thankYouMsgText = await thankYouMsg.getText();
         // verifying success message

@@ -7,17 +7,16 @@ class AddToCartAction {
         await $('//a[@data-test="shopping-cart-link"]').click();
     }
     async cartItems(itemName){
-        return await $(`//div[@data-test="inventory-item-name" and contains(text(),"${itemName}")][1]`);
+        return await $(`//div[@data-test="inventory-item-name" and contains(text(),"${itemName}")]`);
     }
     get itemPrices(){
         return $$('//div[@data-test="inventory-item-price"][1]');
     }
-    async clickOnAddToCartForGU(itemNo) {
-        const addToCartButton = await $(`//div[@class="inventory_item"][${itemNo}]/div/div/button`);
-        await addToCartButton.click();
+    get inventoryList(){
+        return $$('//div[@data-test="inventory-item-name"]');
     }
-    get itemNameForGU(){
-        return $('//div[@class="inventory_item"][1]/div/div/a');
+    get inventoryPriceList(){
+        return $$('//div[@data-test="inventory-item-price"]');
     }
 }
 

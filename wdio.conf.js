@@ -21,7 +21,7 @@ exports.config = {
     // of the config file unless it's absolute.
     //
     specs: [
-        './test/specs/*spec.js'
+        './test/specs/*.specs.js',
     ],
     // Patterns to exclude.
     exclude: [
@@ -129,7 +129,7 @@ exports.config = {
     reporters: [['allure', {
         outputDir: 'allure-results',
         disableWebdriverStepsReporting: false,
-        disableWebdriverScreenshotsReporting: false,
+        disableWebdriverScreenshotsReporting: true,
     }]],
 
     // Options to be passed to Mocha.
