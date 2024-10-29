@@ -23,11 +23,6 @@ let filters = {
     HighToLow: 'hilo'
 }
 
-// Expected Items in cart for verification
-let itemsInCart = {
-    item1: "Test.allTheThings() T-Shirt (Red)",
-};
-
 // Shipping info for checking out
 let checkOutData = {
     f_n: 'mahir',
@@ -127,7 +122,7 @@ describe('Login with glitched user and perform actions', () => {
         await addToCart.clickOnCartIcon();
 
         await browser.waitUntil(async () => {
-            const cartItems = await addToCart.cartItems(itemsInCart.item1);
+            const cartItems = await addToCart.cartItems(actualItems.item1);
             return await cartItems.isDisplayed();
         }, {
             timeout: 5000,
