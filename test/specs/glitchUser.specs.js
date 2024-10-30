@@ -117,8 +117,9 @@ describe('Login with glitched user and perform actions', () => {
         // calculating actual values
         let calculateWithTax = (firstItemPriceValue*0.08);
         calculatedTotalPrice = firstItemPriceValue+calculateWithTax;
-
-        // Checking Cart
+    })
+    it('Should navigate to cart', async()=>{
+        // Clicking on the Cart
         await addToCart.clickOnCartIcon();
 
         await browser.waitUntil(async () => {

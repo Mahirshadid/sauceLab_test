@@ -138,7 +138,8 @@ describe('Login with standard user and perform actions', () => {
         await addToCart.clickOnAddToCart(actualItemsFormatted.item1);
         await addToCart.clickOnAddToCart(actualItemsFormatted.item2);
         await addToCart.clickOnAddToCart(actualItemsFormatted.item3);
-
+    })
+    it('Should navigate to cart', async()=>{
         // Clicking on the Cart
         await addToCart.clickOnCartIcon();
 
