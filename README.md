@@ -26,3 +26,8 @@ Q3 | [Mark 30] Login with performance_glitch_user and Reset App State. Then filt
 - In terminal, type "cd sauceLab_test", and press enter to navigate to the parent folder of the project. sauceLab_test is the parent folder of the project.
 - Now, type "npm install". NPM will install all the necessary packages from the package.json file.
 - Type "npm run test" to run the project and "npm run reporter" to create report using Allure.
+
+# Testomat Report
+
+- https://app.testomat.io/report/967b6e17/592f442d-a1b2-446c-9480-d79d5e23eea5
+- Expiry Date: Dec 31, 2024 12:00 AM
