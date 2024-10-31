@@ -165,6 +165,8 @@ describe('Login with standard user and perform actions', () => {
 
         // Clicking Continue to final page
         await checkOutActions.clickOnContinue();
+
+        await expect(browser).toHaveUrl(expect.stringContaining('checkout-step-two'));
     })
     it('Should verify the selected items', async()=>{
         // Verifying Cart items that are added

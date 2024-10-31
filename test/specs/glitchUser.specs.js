@@ -144,6 +144,8 @@ describe('Login with glitched user and perform actions', () => {
 
         // Clicking Continue to final page
         await checkOutActions.clickOnContinue();
+
+        await expect(browser).toHaveUrl(expect.stringContaining('checkout-step-two'));
     })
     it('Should verify the selected item', async()=>{
         // Verifying Cart items that are added
