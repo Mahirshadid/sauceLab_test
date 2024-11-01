@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 exports.config = {
     //
     // ====================
@@ -155,6 +157,15 @@ exports.config = {
      */
     // onPrepare: function (config, capabilities) {
     // },
+    onPrepare: function (config, capabilities) {
+        // Add environment details to environment.properties
+        const envDetails = `
+            Browser=chrome
+            Platform=${process.platform}
+            Browser.Version=Version 130.0.6723.92 (Official Build) (64-bit)
+        `;
+        fs.writeFileSync('./allure-results/environment.properties', envDetails);
+    },
     /**
      * Gets executed before a worker process is spawned and can be used to initialize specific service
      * for that worker as well as modify runtime environments in an async fashion.
