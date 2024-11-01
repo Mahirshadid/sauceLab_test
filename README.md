@@ -31,3 +31,20 @@ Q3 | [Mark 30] Login with performance_glitch_user and Reset App State. Then filt
 
 - https://app.testomat.io/report/9b929cc8/d7f2a702-9c56-4c1b-bcd0-5e27c74e14f9
 - Expiry Date: Dec 31, 2024 12:00 AM
+
+## How I calculated the tax percentage of the sauceLab items
+
+To find the tax percentage based on the item total and tax amount, you can use this formula:
+
+Tax Percentage = (Tax Amount/Item Total) × 100
+
+Given:
+Item Total = $49.99
+Tax = $4.00
+
+Filling up the values:
+
+Tax Percentage = (4.00/49.99) × 100
+Tax Percentage = 8.00%
+
+So, each item selected has an added 8% tax on its price.
