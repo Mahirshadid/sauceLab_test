@@ -132,7 +132,7 @@ exports.config = {
     reporters: [['allure', {
         outputDir: 'allure-results',
         disableWebdriverStepsReporting: false,
-        disableWebdriverScreenshotsReporting: true,
+        disableWebdriverScreenshotsReporting: false,
     }]],
 
     // Options to be passed to Mocha.
@@ -160,9 +160,9 @@ exports.config = {
     onPrepare: function (config, capabilities) {
         // Add environment details to environment.properties
         const envDetails = `
-            Browser=chrome
+            Browser=${capabilities.browserName}
             Platform=${process.platform}
-            Browser.Version=Version 130.0.6723.92 (Official Build) (64-bit)
+            Browser.Version=${capabilities.browserVersion}
         `;
         fs.writeFileSync('./allure-results/environment.properties', envDetails);
     },

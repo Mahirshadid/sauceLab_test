@@ -3,6 +3,7 @@ const Login = require('../pageobjects/logInPage/logInAction');
 const messages = require('../pageobjects/Features/Messages/messages');
 const checkOutActions = require('../pageobjects/checkOut/checkOutActions');
 const addToCart = require('../pageobjects/Features/Cart/AddToCart');
+const credentials = require('../pageobjects/credentials/credentials');
 
 let emptyCheck = {
     f_n: '',
@@ -22,16 +23,11 @@ let whiteSpace = {
     p_c: '1         2         3'
 }
 
-let std_user = {
-    username: 'standard_user',
-    password: 'secret_sauce'
-};
-
 describe('Negative Testing: Boundary values and edge case handling on checkout info page', ()=>{
     it('Should navigate to checkout page after login and selecting an item', async()=>{
         await Login.InsertLoginInfo(
-            std_user.username,
-            std_user.password
+            credentials.std_user.username,
+            credentials.std_user.password
         );
         await Login.ClickLoginButton();
 

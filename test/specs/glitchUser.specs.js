@@ -8,12 +8,7 @@ const addToCart = require('../pageobjects/Features/Cart/AddToCart');
 const checkOutActions = require('../pageobjects/checkOut/checkOutActions');
 const messages = require('../pageobjects/Features/Messages/messages')
 const logout = require('../pageobjects/Features/logOut/logOut')
-
-// storing login credentials for glitched user
-let pg_user = {
-    username: 'performance_glitch_user',
-    password: 'secret_sauce'
-};
+const credentials = require('../pageobjects/credentials/credentials')
 
 // storing filter options
 let filters = {
@@ -21,13 +16,6 @@ let filters = {
     AtoZ: 'az',
     LowToHigh: 'lohi',
     HighToLow: 'hilo'
-}
-
-// Shipping info for checking out
-let checkOutData = {
-    f_n: 'mahir',
-    l_n: 'shadid',
-    p_c: '4203'
 }
 
 describe('Login with glitched user and perform actions', () => {
@@ -70,8 +58,8 @@ describe('Login with glitched user and perform actions', () => {
     it('Should show inventory page after successful login', async()=>{
         // Login
         await Login.InsertLoginInfo(
-            pg_user.username,
-            pg_user.password
+            credentials.glitched_user.username,
+            credentials.glitched_user.password
         );
         await Login.ClickLoginButton();
         // Verifying that the login is successful and redirected to inventory page
@@ -137,9 +125,9 @@ describe('Login with glitched user and perform actions', () => {
 
         // Inserting Shipping Credentials
         await checkOutActions.insertCheckoutInfo(
-            checkOutData.f_n,
-            checkOutData.l_n,
-            checkOutData.p_c
+            credentials.checkout.firstname,
+            credentials.checkout.lastname,
+            credentials.checkout.postcode
         );
 
         // Clicking Continue to final page

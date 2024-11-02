@@ -3,41 +3,30 @@ const Login = require('../pageobjects/logInPage/logInAction');
 const messages = require('../pageobjects/Features/Messages/messages');
 const addToCart = require('../pageobjects/Features/Cart/AddToCart');
 const checkOutActions = require('../pageobjects/checkOut/checkOutActions');
+const credentials = require('../pageobjects/credentials/credentials');
 
-// storing login credentials for standard user
-let std_user = {
-    username: 'standard_user',
-    password: 'secret_sauce'
-};
-
-// Shipping info for checking out
-let checkOutData = {
-    f_n: 'mahir',
-    l_n: 'shadid',
-    p_c: '4203'
-} 
 
 describe('Negative Testing: Handling empty cart checkout', ()=>{
     it('Should login to user profile', async()=>{
         await Login.InsertLoginInfo(
-            std_user.username,
-            std_user.password
+            credentials.std_user.username,
+            credentials.std_user.password
         );
         await Login.ClickLoginButton();
 
         // Verifying that the login is successful and redirected to inventory page
         await expect(browser).toHaveUrl(expect.stringContaining('inventory'));
     })
-    it('Should insert checkout info after cart page', async()=>{
+    it('Should insert checkout info after cart page without selecting any item', async()=>{
         await addToCart.clickOnCartIcon();
 
         await checkOutActions.clickCheckout();
 
         // Inserting Shipping Credentials
         await checkOutActions.insertCheckoutInfo(
-            checkOutData.f_n,
-            checkOutData.l_n,
-            checkOutData.p_c
+            credentials.checkout.firstname,
+            credentials.checkout.lastname,
+            credentials.checkout.postcode
         );
 
         // Clicking Continue to final page

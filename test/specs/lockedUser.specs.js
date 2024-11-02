@@ -1,18 +1,14 @@
 const { expect } = require('@wdio/globals')
 const Login = require('../pageobjects/logInPage/logInAction')
 const message = require('../pageobjects/Features/Messages/messages')
-
-let locked_out_user = {
-    username: 'locked_out_user',
-    password: 'secret_sauce'
-}
+const credentials = require('../pageobjects/credentials/credentials');
 
 describe('Login with locked_out_user', () => {
     it('Should Insert the login Info for Login', async () => {
         // Login
         await Login.InsertLoginInfo(
-            locked_out_user.username,
-            locked_out_user.password
+            credentials.locked_user.username,
+            credentials.locked_user.password
         );
         await Login.ClickLoginButton();
     })

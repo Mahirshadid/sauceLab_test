@@ -7,19 +7,8 @@ const addToCart = require('../pageobjects/Features/Cart/AddToCart');
 const checkOutActions = require('../pageobjects/checkOut/checkOutActions');
 const messages = require('../pageobjects/Features/Messages/messages');
 const logout = require('../pageobjects/Features/logOut/logOut');
+const credentials = require('../pageobjects/credentials/credentials');
 
-// storing login credentials for standard user
-let std_user = {
-    username: 'standard_user',
-    password: 'secret_sauce'
-};
-
-// Shipping info for checking out
-let checkOutData = {
-    f_n: 'mahir',
-    l_n: 'shadid',
-    p_c: '4203'
-} 
 
 describe('Login with standard user and perform actions', () => {
 
@@ -78,8 +67,8 @@ describe('Login with standard user and perform actions', () => {
     it('Should show inventory page after successful login', async()=>{
         // Login
         await Login.InsertLoginInfo(
-            std_user.username,
-            std_user.password
+            credentials.std_user.username,
+            credentials.std_user.password
         );
         await Login.ClickLoginButton();
         // Verifying that the login is successful and redirected to inventory page
@@ -158,9 +147,9 @@ describe('Login with standard user and perform actions', () => {
 
         // Inserting Shipping Credentials
         await checkOutActions.insertCheckoutInfo(
-            checkOutData.f_n,
-            checkOutData.l_n,
-            checkOutData.p_c
+            credentials.checkout.firstname,
+            credentials.checkout.lastname,
+            credentials.checkout.postcode
         );
 
         // Clicking Continue to final page
