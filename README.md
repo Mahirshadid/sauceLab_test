@@ -16,9 +16,9 @@ test > specs > glitchUser.specs.js
 
 Additionally, I have done a few negative testing besides the positive one just to locate the defects in the demo website; can be found in  
 
-test > specs > negativeTesting > loginPage.js
-                               > checkOutInfoPage.js
-                               > emptyCartCheckout.js
+test > specs > negativeTesting > loginPage.js  
+                               > checkOutInfoPage.js  
+                               > emptyCartCheckout.js  
 
 # Pre-requisites to run the project
 
