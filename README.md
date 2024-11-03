@@ -48,3 +48,7 @@ Tax Percentage = (4.00/49.99) × 100
 Tax Percentage = 8.00%  
 
 So, each item selected has an added 8% tax on its price.
+
+## Allure Report
+
+![Allure Report](https://github.com/user-attachments/assets/6ecb021d-b7ed-4008-b568-e0ac2216fa71)
